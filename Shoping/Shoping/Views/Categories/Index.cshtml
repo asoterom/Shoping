@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Shoping.Data.Entities.Country>
+﻿@model IEnumerable<Shoping.Data.Entities.Category>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 
-<h1>Paises</h1>
+<h1>Categorias</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-outline-primary">Crear Nuevo</a>
@@ -15,7 +15,7 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Países</h3>
+                <h3 class="panel-title">Categorias</h3>
             </div>
             <div class="panel-body">
 
@@ -68,4 +68,5 @@
     });
 </script>
 }
+
 

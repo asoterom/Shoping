@@ -1,4 +1,4 @@
-﻿@model Shoping.Data.Entities.Country
+﻿@model Shoping.Data.Entities.Category
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,7 +6,7 @@
 
 <h1>Editar</h1>
 
-<h4>Pais</h4>
+<h4>Categorias</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -15,7 +15,7 @@
             
             <input type="hidden" asp-for="Id" />
             
-            <partial name="_Country" />
+            <partial name="_Category" />
 
             <div class="form-group mt-2">
                 <input type="submit" value="Guardar" class="btn btn-outline-primary" />
