@@ -1,9 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Shoping.Data.Entities;
 
 namespace Shoping.Data
 {
-    public class DataContext : DbContext
+
+    //como la tabla de usuarios no puede estar en el datacontext este debe heredar del IdentityDBContex
+    //en lugar del DbContext
+    public class DataContext : IdentityDbContext<User>
     {
         public DataContext(DbContextOptions<DataContext> options ) : base( options )
         {
