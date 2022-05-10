@@ -45,6 +45,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 //en la inyeccion se puede pasar la interface y la clase para poder usar pruebas unitarias
 //sino se realizaran se puede pasar solo la clase
 builder.Services.AddTransient<SeedDb>();
+builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<ICombosHelper,CombosHelper>();
 builder.Services.AddScoped<IUserHelper,UserHelper>();
 
