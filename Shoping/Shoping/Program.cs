@@ -20,13 +20,21 @@ builder.Services.AddDbContext<DataContext>(o =>
 //TODO: hacer mas fuerte la contraseña
 builder.Services.AddIdentity<User, IdentityRole>(cfg =>
 {
+    //generador de tokens se puede poner otro sino dejar el por defecto
+    cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+    cfg.SignIn.RequireConfirmedEmail = true; //respuesta de confirmacion de correo
     cfg.User.RequireUniqueEmail = true;
     cfg.Password.RequireDigit = false;
     cfg.Password.RequiredUniqueChars = 0;
     cfg.Password.RequireLowercase = false;
     cfg.Password.RequireNonAlphanumeric = false;
     cfg.Password.RequireUppercase = false;
-}).AddEntityFrameworkStores<DataContext>();
+    cfg.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    cfg.Lockout.MaxFailedAccessAttempts = 3;
+    cfg.Lockout.AllowedForNewUsers = true;
+
+}).AddDefaultTokenProviders() //agregar para usar tokens
+  .AddEntityFrameworkStores<DataContext>();
 
 //configuracion de las cookies, cuando hay problemas de login o acceso denegado
 //envia a la visata noauthorized

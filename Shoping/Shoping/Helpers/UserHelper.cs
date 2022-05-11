@@ -108,7 +108,10 @@ namespace Shoping.Helpers
 
         public async Task<SignInResult> LoginAsync(LoginViewModel model)
         {
-            return await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, false);
+            //se cambio el ultimo parametro a true para poder bloquear cuando se ingresa constraseña
+            //equivocadas
+            return await _signInManager.PasswordSignInAsync(model.Username, model.Password,
+                model.RememberMe,true);
         }
 
         public async Task LogoutAsync()
