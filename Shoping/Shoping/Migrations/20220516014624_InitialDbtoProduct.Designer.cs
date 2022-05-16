@@ -12,8 +12,8 @@ using Shoping.Data;
 namespace Shoping.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220515010223_addProdctEntities")]
-    partial class addProdctEntities
+    [Migration("20220516014624_InitialDbtoProduct")]
+    partial class InitialDbtoProduct
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
