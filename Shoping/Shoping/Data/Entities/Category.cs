@@ -11,5 +11,7 @@ namespace Shoping.Data.Entities
         [Required(ErrorMessage = "El Campo {0} es Obligatorio")]
         public string Name { get; set; }
 
+        public ICollection<ProductCategory> ProductCategories { get; set; }
+
     }
 }

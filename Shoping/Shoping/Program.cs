@@ -54,6 +54,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 //sino se realizaran se puede pasar solo la clase
 builder.Services.AddTransient<SeedDb>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
+builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<ICombosHelper,CombosHelper>();
 builder.Services.AddScoped<IUserHelper,UserHelper>();
 
