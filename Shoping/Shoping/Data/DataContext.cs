@@ -21,6 +21,7 @@ namespace Shoping.Data
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<State> States { get; set; }
+        public DbSet<TemporalSale> TemporalSales { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
