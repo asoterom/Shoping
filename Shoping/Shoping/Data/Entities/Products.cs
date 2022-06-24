@@ -43,6 +43,8 @@ namespace Shoping.Data.Entities
         public string ImageFullPath => ProductImages == null || ProductImages.Count == 0
             ? $"https://localhost:7056/images/noimage.png"
             : ProductImages.FirstOrDefault().ImageFullPath;
+        public ICollection<SaleDetail> SaleDetails { get; set; }
+
     }
 
 }

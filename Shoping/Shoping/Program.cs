@@ -57,6 +57,7 @@ builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<ICombosHelper,CombosHelper>();
 builder.Services.AddScoped<IUserHelper,UserHelper>();
+builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
 
 var app = builder.Build();
 
