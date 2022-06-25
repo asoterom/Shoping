@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Shoping.Data;
 using Shoping.Data.Entities;
 using Shoping.Helpers;
+using Vereyon.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +59,7 @@ builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<ICombosHelper,CombosHelper>();
 builder.Services.AddScoped<IUserHelper,UserHelper>();
 builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
+builder.Services.AddFlashMessage();
 
 var app = builder.Build();
 
