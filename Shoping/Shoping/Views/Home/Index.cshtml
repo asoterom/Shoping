@@ -25,7 +25,9 @@
 <div class="mb-2">
     @foreach (var item in Model.Categories)
     {
-        <span>@item.Name&nbsp;&nbsp;</span>
+        <span>
+            <a href="@Url.Action("Index", "Home", new { searchString = item.Name})" ><strong> @item.Name&nbsp;</strong></a>
+         </span>
     }
 </div>
 
@@ -45,6 +47,7 @@
             <input type="submit" value="Buscar" class="btn btn-warning" />
             <a asp-action="Index" class="btn btn-success">Ver Todos los Productos</a>
         </p>
+
     </div>
 </form>
 
