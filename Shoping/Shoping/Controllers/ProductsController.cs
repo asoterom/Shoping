@@ -283,14 +283,9 @@ namespace Shoping.Controllers
             return RedirectToAction(nameof(Details), new { Id = productImage.Product.Id });
         }
 
-
-        public async Task<IActionResult> AddCategory(int? id)
+        [NoDirectAccess]
+        public async Task<IActionResult> AddCategory(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             Product product = await _context.Products
                 .Include(pc => pc.ProductCategories)
                 .ThenInclude(c => c.Category)
@@ -344,11 +339,19 @@ namespace Shoping.Controllers
                 {
                     _context.Add(productCategory);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Details), new { Id = product.Id });
+                    return Json(new
+                    {
+                        isValid = true,
+                        html = ModalHelper.RenderRazorViewToString(this, "Details", _context.Products
+                             .Include(p => p.ProductImages)
+                             .Include(p => p.ProductCategories)
+                             .ThenInclude(pc => pc.Category)
+                             .FirstOrDefaultAsync(p => p.Id == model.ProductId))
+                    });
                 }
                 catch (Exception exception)
                 {
-                    ModelState.AddModelError(string.Empty, exception.Message);
+                    _flashMessage.Danger(exception.Message);
                 }
             }
 
@@ -359,7 +362,7 @@ namespace Shoping.Controllers
             }).ToList();
 
             model.Categories = await _combosHelper.GetComboCategoriesAsync(categories);
-            return View(model);
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "AddCategory", model) });
         }
 
         public async Task<IActionResult> DeleteCategory(int? id)
