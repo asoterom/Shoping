@@ -120,7 +120,7 @@ namespace Shoping.Controllers
                         isValid = true,
                         html = ModalHelper.RenderRazorViewToString(
                             this,
-                            "_ViewAll",
+                            "_ViewAllCountries",
                             _context.Countries
                                 .Include(c => c.States)
                                 .ThenInclude(s => s.Cities)
@@ -370,13 +370,10 @@ namespace Shoping.Controllers
         #endregion
 
         #region City
-        public async Task<IActionResult> AddCity(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
+        [NoDirectAccess]
+        public async Task<IActionResult> AddCity(int id)
+        {
             var state = await _context.States.FindAsync(id);
             if (state == null)
             {
@@ -395,46 +392,44 @@ namespace Shoping.Controllers
         {
             if (ModelState.IsValid)
             {
+                State state = await _context.States.FindAsync(model.StateId);
+                City city = new()
+                {
+                    State = state,
+                    Name = model.Name
+                };
+                _context.Add(city);
                 try
                 {
-                    City city = new()
-                    {
-                        State = await _context.States.FindAsync(model.StateId),
-                        Name = model.Name,
-                    };
-
-                    _context.Add(city);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(DetailsState), new { Id = model.StateId });
-
+                    state = await _context.States
+                        .Include(s => s.Cities)
+                        .FirstOrDefaultAsync(c => c.Id == model.StateId);
+                    return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAllCities", state) });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una ciudad con el mismo nombre en este departamento/estado.");
+                        _flashMessage.Danger("Ya existe una ciudad con el mismo nombre.");
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                        _flashMessage.Danger(dbUpdateException.InnerException.Message);
                     }
                 }
                 catch (Exception exception)
                 {
-                    ModelState.AddModelError(string.Empty, exception.Message);
+                    _flashMessage.Danger(exception.Message);
                 }
             }
-            return View(model);
 
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "AddCity", model) });
         }
 
-        public async Task<IActionResult> EditCity(int? id)
+        [NoDirectAccess]
+        public async Task<IActionResult> EditCity(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var city = await _context.Cities
                 .Include(c => c.State)
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -466,22 +461,24 @@ namespace Shoping.Controllers
             {
                 try
                 {
-
-                    City city = new City()
+                    City city = new()
                     {
                         Id = model.Id,
-                        Name = model.Name
+                        Name = model.Name,
                     };
-
                     _context.Update(city);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(DetailsState), new { Id = model.StateId });
+                    State state = await _context.States
+                        .Include(s => s.Cities)
+                        .FirstOrDefaultAsync(c => c.Id == model.StateId);
+                    _flashMessage.Confirmation("Registro actualizado.");
+                    return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAllCities", state) });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una ciudad con el mismo nombre en este departamento/estado.");
+                        ModelState.AddModelError(string.Empty, "Ya existe una ciuad con el mismo nombre en este Departamento / Estado.");
                     }
                     else
                     {
@@ -493,32 +490,15 @@ namespace Shoping.Controllers
                     ModelState.AddModelError(string.Empty, exception.Message);
                 }
             }
-            return View(model);
+
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "EditCity", model) });
         }
-        public async Task<IActionResult> DetailsCity(int? id)
+
+
+
+        [NoDirectAccess]
+        public async Task<IActionResult> DeleteCity(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var city = await _context.Cities
-                .Include(c => c.State)
-                .FirstOrDefaultAsync(c => c.Id == id);
-            if (city == null)
-            {
-                return NotFound();
-            }
-
-            return View(city);
-        }
-        public async Task<IActionResult> DeleteCity(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             City city = await _context.Cities
                 .Include(c => c.State)
                 .FirstOrDefaultAsync(c => c.Id == id);
@@ -540,6 +520,7 @@ namespace Shoping.Controllers
             _flashMessage.Info("Registro borrado.");
             return RedirectToAction(nameof(DetailsState), new { Id = city.State.Id });
         }
+
 
 
         #endregion
